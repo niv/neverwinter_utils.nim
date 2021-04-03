@@ -35,6 +35,7 @@ Options:
                               databases.
 
   -p, --pretty                Pretty output (json only)
+  -u, --unsorted              Don't sort keys (json only)
   $OPT
 """
 
@@ -76,7 +77,8 @@ case outformat:
 of "gff":    output.write(state)
 of "json":
              let j = state.toJson()
-             postProcessJson(j)
+             if not args["--unsorted"]:
+               postProcessJson(j)
              output.write(if args["--pretty"]: j.pretty() else: $j)
              output.write("\c\L")
 else: quit("Unsupported outformat: " & outformat)
