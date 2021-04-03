@@ -8,7 +8,7 @@ type
   GffStruct* = ref object of RootObj
     root: GffRoot
     id*: int32
-    fields: TableRef[string, GffField]
+    fields: OrderedTableRef[string, GffField]
 
   GffByte* = uint8
   GffChar* = int8
@@ -268,7 +268,7 @@ proc newCExoLocString*(): GffCExoLocString =
   result.strRef = BadStrRef
 
 proc initGffStruct(self: GffStruct, id: int32 = -1) =
-  self.fields = newTable[string, GffField]()
+  self.fields = newOrderedTable[string, GffField]()
   self.id = id
 
 proc newGffStruct*(id: int32 = -1): GffStruct =
@@ -324,7 +324,7 @@ proc hasField*[T: GffFieldType](self: GffStruct, label: string, t: typedesc[T]):
   ## Returns true if self has a label of the given type.
   result = self.fields.hasKey(label) and self.fields[label].fieldKind.hasTypeOf(t)
 
-proc fields*(self: GffStruct): TableRef[string, GffField] =
+proc fields*(self: GffStruct): OrderedTableRef[string, GffField] =
   ## Gives you a ref to the table holding all the GffField instannces.
   ## You can use this to iterate or do advanced manipulation if the
   ## strongly typed syntactic sugar on GffStruct is not enough.
